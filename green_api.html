@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HTML-page</title>
+    <style>
+        .left, .right {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            padding-top: 30px;
+            align-items: flex-start;
+        }
+        .left {
+            padding-left: 100px;
+        }
+
+        #output {
+            width: 60%;
+            height: 700px;
+        }
+
+        .title {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        var apiUrl = 'https://7103.api.greenapi.com';
+
+        function getSettings() {
+            var idInstance = document.getElementById('idInstance').value;
+            var apiTokenInstance = document.getElementById('apiTokenInstance').value;
+
+            var url = apiUrl + '/waInstance' + idInstance + '/getSettings/' + apiTokenInstance;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('output').value = error;
+            });
+        }
+
+        function getStateInstance() {
+            var idInstance = document.getElementById('idInstance').value;
+            var apiTokenInstance = document.getElementById('apiTokenInstance').value;
+
+            var url = apiUrl + '/waInstance' + idInstance + '/getStateInstance/' + apiTokenInstance;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('output').value = error;
+            });
+        }
+
+        function sendMessage() {
+            var idInstance = document.getElementById('idInstance').value;
+            var apiTokenInstance = document.getElementById('apiTokenInstance').value;
+            var chatId = document.getElementById('chatId').value;
+            var message = document.getElementById('message').value;
+
+            var url = apiUrl + '/waInstance' + idInstance + '/sendMessage/' + apiTokenInstance;
+
+            var data = {
+                chatId: chatId + '@c.us',
+                message: message
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('output').value = error;
+            });
+        }
+
+        function sendFileByUrl() {
+            var idInstance = document.getElementById('idInstance').value;
+            var apiTokenInstance = document.getElementById('apiTokenInstance').value;
+            var chatIdFile = document.getElementById('chatIdFile').value;
+            var fileUrl = document.getElementById('fileUrl').value;
+
+            var url = apiUrl + '/waInstance' + idInstance + '/sendFileByUrl/' + apiTokenInstance;
+
+            var data = {
+                chatId: chatIdFile + '@c.us',
+                urlFile: fileUrl,
+                fileName: 'file.jpg' 
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('output').value = error;
+            });
+        }
+    </script>
+</head>
+<body>
+    <div style="display: flex;">
+        <div class="left">
+            <input type="text" id="idInstance" placeholder="idInstance" size="70">
+            <input type="text" id="apiTokenInstance" placeholder="ApiTokenInstance" size="70"><br>
+
+            <button onclick="getSettings()">getSettings</button><br>
+            <button onclick="getStateInstance()">getStateInstance</button><br>
+
+            <input type="text" id="chatId" placeholder="77771234567" size="70">
+            <textarea id="message" placeholder="Hello World!" style="width: 474px; height: 70px; resize: none;"></textarea>
+            <button onclick="sendMessage()">sendMessage</button><br>
+
+            <input type="text" id="chatIdFile" placeholder="77771234567" size="70">
+            <input type="text" id="fileUrl" placeholder="https://mysite.com/image1.png" size="70">
+            <button onclick="sendFileByUrl()">sendFileByUrl</button>
+        </div>
+        <div class="right">
+            <div class="title">Ответ:</div>
+            <textarea id="output" readonly></textarea>
+        </div>
+    </div>
+</body>
+</html>
